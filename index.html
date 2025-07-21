@@ -253,6 +253,7 @@
             return projects;
         }
 
+</script><script>
         function renderProjects(projects) {
             const container = document.getElementById("project-container");
 
@@ -262,32 +263,36 @@
                     .map(tag => `<span class="text-xs bg-gray-700 py-1 px-3 rounded-full">${tag.trim()}</span>`)
                     .join("");
 
-                const textSection = `
-      <div class="md:w-1/2 ${project.reverse === 'true' ? 'md:order-2 md:ml-8' : 'mb-6 md:mb-0 md:mr-8'}">
-        <h3 class="text-2xl font-semibold mb-2">${project.title}</h3>
-        <p class="text-gray-300 text-sm mb-4">${project.description}</p>
-        <div class="flex items-center space-x-4 mb-6">${tags}</div>
-        <a href="${project.url || '#'}" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-5 py-3 rounded-full shadow-md hover:bg-blue-700 transition">
-          <span class="material-icons text-base">launch</span>
-          View Full Project
-        </a>
-      </div>
-    `;
+           const outerCard = document.createElement("div");
+outerCard.className = "bg-[#1a1a2e] rounded-xl shadow-xl p-6 mb-8";
 
-                const imageSection = `
-      <div class="md:w-1/2 ${project.reverse === 'true' ? 'md:order-1' : ''}">
-        <img class="rounded-lg w-full" src="${project.image}" alt="${project.title} screenshot">
-      </div>
-    `;
+// Handle reverse logic for desktop layout
+const reverse = project.reverse === 'true';
 
-                const outerCard = document.createElement("div");
-                outerCard.className = "bg-[#1a1a2e] rounded-xl shadow-xl p-6 mb-8";
-                outerCard.innerHTML = `
-      <div class="md:flex items-center justify-between">
-        ${textSection}
-        ${imageSection}
+outerCard.innerHTML = `
+  <div class="md:flex items-center justify-between">
+    <!-- Image: always on top in mobile -->
+    <div class="mb-4 md:mb-0 md:w-1/2 ${reverse ? 'md:order-2' : ''}">
+      <img class="rounded-lg w-full" src="${project.image}" alt="${project.title} screenshot">
+    </div>
+
+    <!-- Text: always below image on mobile -->
+    <div class="md:w-1/2 ${reverse ? 'md:order-1 md:mr-8' : 'md:ml-8'}">
+      <h3 class="text-2xl font-semibold mb-2">${project.title}</h3>
+      <p class="text-gray-300 text-sm mb-4">${project.description}</p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        ${(project.tags || "").split(",").map(tag => `
+          <span class="text-xs bg-gray-700 py-1 px-3 rounded-full">${tag.trim()}</span>
+        `).join("")}
       </div>
-    `;
+      <a href="${project.url || '#'}" target="_blank"
+        class="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-5 py-3 rounded-full shadow-md hover:bg-blue-700 transition">
+        <span class="material-icons text-base">launch</span>
+        View Full Project
+      </a>
+    </div>
+  </div>
+`;
 
                 container.appendChild(outerCard);
             });
